@@ -1,0 +1,21 @@
+# -----------------------------------------------------------------------------
+# arnica-k8s-reader
+#
+# Creates a read-only identity for Arnica in the release namespace:
+#   ServiceAccount + long-lived token Secret (namespaced)
+#   ClusterRole + ClusterRoleBinding (cluster-scoped)
+#
+# The namespace itself is NOT created by the chart. Use
+# `helm install ... -n arnica-reader --create-namespace`.
+# -----------------------------------------------------------------------------
+
+# Name for the ServiceAccount, ClusterRole and ClusterRoleBinding. Cluster-scoped
+# objects must be unique per cluster, so change this to install a second copy.
+name: arnica-reader
+
+# Extra ClusterRole rules appended to the default read-only set, e.g.:
+#   extraRules:
+#     - apiGroups: [cert-manager.io]
+#       resources: [certificates]
+#       verbs: [get, list, watch]
+extraRules: []

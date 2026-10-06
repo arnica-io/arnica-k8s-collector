@@ -1,0 +1,71 @@
+name: release
+
+# Publishes the chart whenever main carries a Chart.yaml version that has no
+# git tag yet. Bump `version` in Chart.yaml in your PR; merging ships it.
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency: release
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Check whether this version is already released
+        id: version
+        run: |
+          VERSION=$(awk '/^version:/ {print $2}' Chart.yaml)
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v${VERSION}" >/dev/null; then
+            echo "v${VERSION} already released, nothing to do."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Helm
+        if: steps.version.outputs.release == 'true'
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+
+      - name: Lint
+        if: steps.version.outputs.release == 'true'
+        run: helm lint .
+
+      - name: Log in to ghcr.io
+        if: steps.version.outputs.release == 'true'
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        run: echo "$GHCR_TOKEN" | helm registry login ghcr.io --username "$GHCR_USER" --password-stdin
+
+      - name: Package and push chart
+        if: steps.version.outputs.release == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          helm package .
+          helm push "arnica-k8s-reader-${VERSION}.tgz" oci://ghcr.io/arnica-io
+
+      - name: Tag and create GitHub release
+        if: steps.version.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "v${VERSION}" "arnica-k8s-reader-${VERSION}.tgz" \
+            --target "$GITHUB_SHA" \
+            --title "v${VERSION}" \
+            --generate-notes
