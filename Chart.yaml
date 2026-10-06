@@ -2,7 +2,7 @@ apiVersion: v2
 name: arnica-k8s-collector
 description: Read-only ServiceAccount that lets Arnica inventory your Kubernetes cluster (workloads, networking, RBAC, GitOps objects). No secrets access, no write access.
 type: application
-version: 0.1.2
+version: 0.1.3
 appVersion: "1"
 home: https://github.com/arnica-io/arnica-k8s-collector
 keywords:
