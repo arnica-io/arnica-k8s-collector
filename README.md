@@ -28,12 +28,13 @@ Verbs are only `get`, `list`, `watch`. **No write access of any kind. No access 
 | `gateway.networking.k8s.io` | httproutes |
 | `rbac.authorization.k8s.io` | roles, clusterroles, rolebindings, clusterrolebindings |
 | `autoscaling` | horizontalpodautoscalers |
+| `keda.sh` | scaledobjects, scaledjobs |
 | `argoproj.io` | applications |
 | `kustomize.toolkit.fluxcd.io` | kustomizations |
 | `helm.toolkit.fluxcd.io` | helmreleases |
 | `source.toolkit.fluxcd.io` | gitrepositories |
 
-Rules for API groups you don't have installed (for example Flux or Gateway API) do nothing.
+Rules for API groups you don't have installed (for example KEDA, Flux or Gateway API) do nothing.
 
 ## Prerequisites
 
