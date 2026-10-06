@@ -7,8 +7,8 @@ set -euo pipefail
 ns=arnica-collector
 cd "$(dirname "$0")/.."
 
-helm upgrade --install reader . -n "$ns" --create-namespace --wait
-out=$(scripts/connection-line.sh "$ns" arnica-reader-token)
+helm upgrade --install collector . -n "$ns" --create-namespace --wait
+out=$(scripts/connection-line.sh "$ns" arnica-collector-token)
 printf '%s\n' "$out" | grep -q '^arnica-cluster-v1\.'
 
 json=$(printf '%s' "${out##*arnica-cluster-v1.}" | base64 -d)
@@ -23,14 +23,14 @@ kubectl --kubeconfig "$kc" config set-credentials u --token "$(printf '%s' "$jso
 kubectl --kubeconfig "$kc" config set-context c --cluster c --user u >/dev/null
 kubectl --kubeconfig "$kc" config use-context c >/dev/null
 
-as_reader() { kubectl --kubeconfig "$kc" "$@"; }
+as_collector() { kubectl --kubeconfig "$kc" "$@"; }
 
-as_reader get pods -A >/dev/null
-as_reader get clusterroles >/dev/null
+as_collector get pods -A >/dev/null
+as_collector get clusterroles >/dev/null
 for check in "get secrets -A" "create configmaps -n $ns" "delete pods -A"; do
   # shellcheck disable=SC2086
-  if as_reader auth can-i $check >/dev/null 2>&1; then
-    echo "FAIL: reader is allowed to '$check'" >&2
+  if as_collector auth can-i $check >/dev/null 2>&1; then
+    echo "FAIL: collector is allowed to '$check'" >&2
     exit 1
   fi
 done

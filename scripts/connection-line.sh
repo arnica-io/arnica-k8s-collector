@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Prints the line to paste into Arnica: server URL + CA + token of the
-# arnica-reader ServiceAccount, base64-encoded as one string.
+# arnica-collector ServiceAccount, base64-encoded as one string.
 # Usage: connection-line.sh [namespace] [token-secret-name]
 # The server URL comes from your current kubectl context, so run this with the
 # context Arnica should reach (not a localhost / port-forward context).
 set -euo pipefail
 
 ns="${1:-arnica-collector}"
-secret="${2:-arnica-reader-token}"
+secret="${2:-arnica-collector-token}"
 
 i=0
 until [ -n "$(kubectl -n "$ns" get secret "$secret" -o jsonpath='{.data.token}' 2>/dev/null)" ]; do

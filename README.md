@@ -8,10 +8,10 @@ The chart creates four objects:
 
 | Object | Scope | Purpose |
 | --- | --- | --- |
-| ServiceAccount `arnica-reader` | release namespace | The identity Arnica uses |
-| Secret `arnica-reader-token` | release namespace | Long-lived token for that ServiceAccount |
-| ClusterRole `arnica-reader` | cluster | `get`, `list`, `watch` on the resources below |
-| ClusterRoleBinding `arnica-reader` | cluster | Binds the role to the ServiceAccount |
+| ServiceAccount `arnica-collector` | release namespace | The identity Arnica uses |
+| Secret `arnica-collector-token` | release namespace | Long-lived token for that ServiceAccount |
+| ClusterRole `arnica-collector` | cluster | `get`, `list`, `watch` on the resources below |
+| ClusterRoleBinding `arnica-collector` | cluster | Binds the role to the ServiceAccount |
 
 After install you run one command that prints a single line. You paste that line into Arnica. Nothing is sent anywhere automatically.
 
@@ -55,7 +55,7 @@ helm install arnica-collector oci://ghcr.io/arnica-io/arnica-k8s-collector -n ar
 **2. Print the connection line.** The install output (`NOTES`) contains a ready-to-paste block that does this. Or run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-collector/main/scripts/connection-line.sh | bash -s -- arnica-collector arnica-reader-token
+curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-collector/main/scripts/connection-line.sh | bash -s -- arnica-collector arnica-collector-token
 ```
 
 The script waits up to a minute for Kubernetes to fill in the token, then prints:
@@ -77,7 +77,7 @@ All settings are optional. Override them with `--set key=value` or `-f values.ya
 
 | Value | Default | Description |
 | --- | --- | --- |
-| `name` | `arnica-reader` | Name of the ServiceAccount, ClusterRole and ClusterRoleBinding. The token Secret is `<name>-token`. |
+| `name` | `arnica-collector` | Name of the ServiceAccount, ClusterRole and ClusterRoleBinding. The token Secret is `<name>-token`. |
 | `extraRules` | `[]` | Extra ClusterRole rules, appended to the default set. |
 
 Example: also let Arnica read cert-manager certificates:
@@ -100,7 +100,7 @@ helm upgrade --install arnica-collector oci://ghcr.io/arnica-io/arnica-k8s-colle
 Delete the Secret and let Helm recreate it. Kubernetes issues a new token and the old one stops working right away:
 
 ```bash
-kubectl -n arnica-collector delete secret arnica-reader-token
+kubectl -n arnica-collector delete secret arnica-collector-token
 helm upgrade arnica-collector oci://ghcr.io/arnica-io/arnica-k8s-collector -n arnica-collector --reuse-values
 ```
 
