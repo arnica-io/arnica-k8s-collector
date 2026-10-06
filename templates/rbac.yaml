@@ -4,14 +4,14 @@ metadata:
   name: {{ .Values.name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "arnica-k8s-reader.labels" . | nindent 4 }}
+    {{- include "arnica-k8s-collector.labels" . | nindent 4 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: {{ .Values.name }}
   labels:
-    {{- include "arnica-k8s-reader.labels" . | nindent 4 }}
+    {{- include "arnica-k8s-collector.labels" . | nindent 4 }}
 rules:
   - apiGroups: [""]
     resources: [namespaces, nodes, pods, services, serviceaccounts, configmaps, persistentvolumeclaims, persistentvolumes]
@@ -55,7 +55,7 @@ kind: ClusterRoleBinding
 metadata:
   name: {{ .Values.name }}
   labels:
-    {{- include "arnica-k8s-reader.labels" . | nindent 4 }}
+    {{- include "arnica-k8s-collector.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -68,10 +68,10 @@ subjects:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "arnica-k8s-reader.tokenSecretName" . }}
+  name: {{ include "arnica-k8s-collector.tokenSecretName" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "arnica-k8s-reader.labels" . | nindent 4 }}
+    {{- include "arnica-k8s-collector.labels" . | nindent 4 }}
   annotations:
     kubernetes.io/service-account.name: {{ .Values.name }}
 type: kubernetes.io/service-account-token

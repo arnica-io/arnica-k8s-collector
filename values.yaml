@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# arnica-k8s-reader
+# arnica-k8s-collector
 #
 # Creates a read-only identity for Arnica in the release namespace:
 #   ServiceAccount + long-lived token Secret (namespaced)

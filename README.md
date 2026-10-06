@@ -1,4 +1,4 @@
-# Arnica Kubernetes Reader
+# Arnica Kubernetes Collector
 
 ## What is this?
 
@@ -49,13 +49,13 @@ No container images are pulled. The chart only creates RBAC objects and a Secret
 **1. Install the chart:**
 
 ```bash
-helm install arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-reader -n arnica-reader --create-namespace
+helm install arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-collector -n arnica-reader --create-namespace
 ```
 
 **2. Print the connection line.** The install output (`NOTES`) contains a ready-to-paste block that does this. Or run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-reader/main/scripts/connection-line.sh | bash -s -- arnica-reader arnica-reader-token
+curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-collector/main/scripts/connection-line.sh | bash -s -- arnica-reader arnica-reader-token
 ```
 
 The script waits up to a minute for Kubernetes to fill in the token, then prints:
@@ -91,7 +91,7 @@ extraRules:
 ```
 
 ```bash
-helm upgrade --install arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-reader \
+helm upgrade --install arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-collector \
   -n arnica-reader --create-namespace -f my-values.yaml
 ```
 
@@ -101,7 +101,7 @@ Delete the Secret and let Helm recreate it. Kubernetes issues a new token and th
 
 ```bash
 kubectl -n arnica-reader delete secret arnica-reader-token
-helm upgrade arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-reader -n arnica-reader --reuse-values
+helm upgrade arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-collector -n arnica-reader --reuse-values
 ```
 
 Then run step 2 again and paste the new line into Arnica.
@@ -117,4 +117,4 @@ This removes the ServiceAccount, its token, the ClusterRole and the ClusterRoleB
 
 ## Releasing (maintainers)
 
-Bump `version` in `Chart.yaml` in your PR. When it merges to `main`, the `release` workflow pushes the chart to `oci://ghcr.io/arnica-io/arnica-k8s-reader` and creates a `v<version>` tag and GitHub release. CI fails a PR that changes the chart without bumping the version.
+Bump `version` in `Chart.yaml` in your PR. When it merges to `main`, the `release` workflow pushes the chart to `oci://ghcr.io/arnica-io/arnica-k8s-collector` and creates a `v<version>` tag and GitHub release. CI fails a PR that changes the chart without bumping the version.

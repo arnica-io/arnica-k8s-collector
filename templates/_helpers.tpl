@@ -1,8 +1,8 @@
-{{- define "arnica-k8s-reader.tokenSecretName" -}}
+{{- define "arnica-k8s-collector.tokenSecretName" -}}
 {{- printf "%s-token" .Values.name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "arnica-k8s-reader.labels" -}}
+{{- define "arnica-k8s-collector.labels" -}}
 helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 app.kubernetes.io/name: {{ .Chart.Name }}
 app.kubernetes.io/instance: {{ .Release.Name }}

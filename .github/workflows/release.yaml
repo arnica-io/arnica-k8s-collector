@@ -57,7 +57,7 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           helm package .
-          helm push "arnica-k8s-reader-${VERSION}.tgz" oci://ghcr.io/arnica-io
+          helm push "arnica-k8s-collector-${VERSION}.tgz" oci://ghcr.io/arnica-io
 
       - name: Tag and create GitHub release
         if: steps.version.outputs.release == 'true'
@@ -65,7 +65,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          gh release create "v${VERSION}" "arnica-k8s-reader-${VERSION}.tgz" \
+          gh release create "v${VERSION}" "arnica-k8s-collector-${VERSION}.tgz" \
             --target "$GITHUB_SHA" \
             --title "v${VERSION}" \
             --generate-notes
