@@ -11,7 +11,7 @@
 
 # Name for the ServiceAccount, ClusterRole and ClusterRoleBinding. Cluster-scoped
 # objects must be unique per cluster, so change this to install a second copy.
-name: arnica-reader
+name: arnica-collector
 
 # Extra ClusterRole rules appended to the default read-only set, e.g.:
 #   extraRules:
