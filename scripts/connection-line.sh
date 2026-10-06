@@ -6,7 +6,7 @@
 # context Arnica should reach (not a localhost / port-forward context).
 set -euo pipefail
 
-ns="${1:-arnica-reader}"
+ns="${1:-arnica-collector}"
 secret="${2:-arnica-reader-token}"
 
 i=0

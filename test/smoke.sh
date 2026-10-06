@@ -4,7 +4,7 @@
 # read-only: can list pods cluster-wide, cannot read secrets or write.
 set -euo pipefail
 
-ns=arnica-reader
+ns=arnica-collector
 cd "$(dirname "$0")/.."
 
 helm upgrade --install reader . -n "$ns" --create-namespace --wait

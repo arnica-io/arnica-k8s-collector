@@ -6,7 +6,7 @@
 #   ClusterRole + ClusterRoleBinding (cluster-scoped)
 #
 # The namespace itself is NOT created by the chart. Use
-# `helm install ... -n arnica-reader --create-namespace`.
+# `helm install ... -n arnica-collector --create-namespace`.
 # -----------------------------------------------------------------------------
 
 # Name for the ServiceAccount, ClusterRole and ClusterRoleBinding. Cluster-scoped
