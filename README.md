@@ -1,4 +1,4 @@
-# Arnica Kubernetes Reader
+# Arnica Kubernetes Collector
 
 ## What is this?
 
@@ -49,13 +49,13 @@ No container images are pulled. The chart only creates RBAC objects and a Secret
 **1. Install the chart:**
 
 ```bash
-helm install arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-reader -n arnica-reader --create-namespace
+helm install arnica-collector oci://ghcr.io/arnica-io/arnica-k8s-collector -n arnica-collector --create-namespace
 ```
 
 **2. Print the connection line.** The install output (`NOTES`) contains a ready-to-paste block that does this. Or run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-reader/main/scripts/connection-line.sh | bash -s -- arnica-reader arnica-reader-token
+curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-collector/main/scripts/connection-line.sh | bash -s -- arnica-collector arnica-reader-token
 ```
 
 The script waits up to a minute for Kubernetes to fill in the token, then prints:
@@ -69,7 +69,7 @@ arnica-cluster-v1.eyJzZXJ2ZXIiOi...
 
 The line is base64 of `{"server": ..., "caData": ..., "token": ...}`: your API server URL, its CA certificate, and the ServiceAccount token. Treat it like a password and share it only with Arnica.
 
-To show the install instructions again later: `helm get notes arnica-reader -n arnica-reader`.
+To show the install instructions again later: `helm get notes arnica-collector -n arnica-collector`.
 
 ## Configuration
 
@@ -91,8 +91,8 @@ extraRules:
 ```
 
 ```bash
-helm upgrade --install arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-reader \
-  -n arnica-reader --create-namespace -f my-values.yaml
+helm upgrade --install arnica-collector oci://ghcr.io/arnica-io/arnica-k8s-collector \
+  -n arnica-collector --create-namespace -f my-values.yaml
 ```
 
 ## Rotate the token
@@ -100,8 +100,8 @@ helm upgrade --install arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-reader \
 Delete the Secret and let Helm recreate it. Kubernetes issues a new token and the old one stops working right away:
 
 ```bash
-kubectl -n arnica-reader delete secret arnica-reader-token
-helm upgrade arnica-reader oci://ghcr.io/arnica-io/arnica-k8s-reader -n arnica-reader --reuse-values
+kubectl -n arnica-collector delete secret arnica-reader-token
+helm upgrade arnica-collector oci://ghcr.io/arnica-io/arnica-k8s-collector -n arnica-collector --reuse-values
 ```
 
 Then run step 2 again and paste the new line into Arnica.
@@ -109,12 +109,12 @@ Then run step 2 again and paste the new line into Arnica.
 ## Revoke access / uninstall
 
 ```bash
-helm uninstall arnica-reader -n arnica-reader
-kubectl delete namespace arnica-reader
+helm uninstall arnica-collector -n arnica-collector
+kubectl delete namespace arnica-collector
 ```
 
 This removes the ServiceAccount, its token, the ClusterRole and the ClusterRoleBinding. Arnica's access ends right away.
 
 ## Releasing (maintainers)
 
-Bump `version` in `Chart.yaml` in your PR. When it merges to `main`, the `release` workflow pushes the chart to `oci://ghcr.io/arnica-io/arnica-k8s-reader` and creates a `v<version>` tag and GitHub release. CI fails a PR that changes the chart without bumping the version.
+Bump `version` in `Chart.yaml` in your PR. When it merges to `main`, the `release` workflow pushes the chart to `oci://ghcr.io/arnica-io/arnica-k8s-collector` and creates a `v<version>` tag and GitHub release. CI fails a PR that changes the chart without bumping the version.

@@ -22,7 +22,7 @@ jobs:
         run: helm lint .
 
       - name: Helm template
-        run: helm template reader . -n arnica-reader > /dev/null
+        run: helm template reader . -n arnica-collector > /dev/null
 
       - name: Shellcheck
         run: shellcheck scripts/*.sh test/*.sh

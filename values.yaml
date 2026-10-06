@@ -1,12 +1,12 @@
 # -----------------------------------------------------------------------------
-# arnica-k8s-reader
+# arnica-k8s-collector
 #
 # Creates a read-only identity for Arnica in the release namespace:
 #   ServiceAccount + long-lived token Secret (namespaced)
 #   ClusterRole + ClusterRoleBinding (cluster-scoped)
 #
 # The namespace itself is NOT created by the chart. Use
-# `helm install ... -n arnica-reader --create-namespace`.
+# `helm install ... -n arnica-collector --create-namespace`.
 # -----------------------------------------------------------------------------
 
 # Name for the ServiceAccount, ClusterRole and ClusterRoleBinding. Cluster-scoped

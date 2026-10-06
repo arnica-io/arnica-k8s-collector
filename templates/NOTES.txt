@@ -4,14 +4,14 @@ Next: print the line to paste into Arnica. Run the block below with the same
 kubectl context you used for this install; the API server URL is taken from it.
 
 ----- copy from here -----
-bash -s -- {{ .Release.Namespace }} {{ include "arnica-k8s-reader.tokenSecretName" . }} <<'ARNICA_EOF'
+bash -s -- {{ .Release.Namespace }} {{ include "arnica-k8s-collector.tokenSecretName" . }} <<'ARNICA_EOF'
 {{ .Files.Get "scripts/connection-line.sh" }}
 ARNICA_EOF
 ----- to here -----
 
 Same thing, fetched from GitHub:
 
-    curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-reader/v{{ .Chart.Version }}/scripts/connection-line.sh | bash -s -- {{ .Release.Namespace }} {{ include "arnica-k8s-reader.tokenSecretName" . }}
+    curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-collector/v{{ .Chart.Version }}/scripts/connection-line.sh | bash -s -- {{ .Release.Namespace }} {{ include "arnica-k8s-collector.tokenSecretName" . }}
 
 The line contains a long-lived token. Paste it only into Arnica.
 
