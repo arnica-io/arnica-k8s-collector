@@ -9,6 +9,6 @@
 .idea/
 .vscode/
 .github/
-README.md
+*.md
 LICENSE
 test/
