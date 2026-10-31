@@ -50,11 +50,11 @@ No container images are pulled. The chart only creates RBAC objects and a Secret
 **1. Install the chart and print the connection line:**
 
 ```bash
-helm install arnica-collector oci://ghcr.io/arnica-io/arnica-k8s-collector -n arnica-collector --create-namespace >/dev/null \
-  && curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-collector/main/scripts/connection-line.sh | bash
+helm install arnica-collector oci://ghcr.io/arnica-io/arnica-k8s-collector -n arnica-collector --create-namespace >/dev/null
+curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-collector/main/scripts/connection-line.sh | bash
 ```
 
-`>/dev/null` hides Helm's status output; errors still show. The second half runs [`scripts/connection-line.sh`](scripts/connection-line.sh), which waits up to a minute for Kubernetes to fill in the token, then prints:
+`>/dev/null` hides Helm's status output; errors still show. The second line runs [`scripts/connection-line.sh`](scripts/connection-line.sh), which waits up to a minute for Kubernetes to fill in the token, then prints:
 
 ```
 Paste this line into Arnica:
@@ -71,7 +71,7 @@ To revoke Arnica's access:
 
 The line is base64 of `{"server": ..., "caData": ..., "token": ...}`: your API server URL, its CA certificate, and the ServiceAccount token. Treat it like a password and share it only with Arnica.
 
-To print the line again later, run only the `curl … | bash` part.
+To print the line again later, run only the second line.
 
 ## Configuration
 
@@ -106,7 +106,7 @@ kubectl -n arnica-collector delete secret arnica-collector-token
 helm upgrade arnica-collector oci://ghcr.io/arnica-io/arnica-k8s-collector -n arnica-collector --reuse-values
 ```
 
-Then print the line again (the `curl … | bash` part of step 1) and paste the new line into Arnica.
+Then print the line again (the second line of step 1) and paste the new line into Arnica.
 
 ## Revoke access / uninstall
 
