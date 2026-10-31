@@ -5,13 +5,18 @@
 set -euo pipefail
 
 ns=arnica-collector
+release=collector
 cd "$(dirname "$0")/.."
 
-helm upgrade --install collector . -n "$ns" --create-namespace --wait
+helm upgrade --install "$release" . -n "$ns" --create-namespace --wait
 out=$(scripts/connection-line.sh "$ns" arnica-collector-token)
-printf '%s\n' "$out" | grep -q '^arnica-cluster-v1\.'
+line=$(printf '%s\n' "$out" | grep '^arnica-cluster-v1\.')
+if ! printf '%s\n' "$out" | grep -qF "helm uninstall $release -n $ns"; then
+  echo "FAIL: revoke text does not name release '$release'" >&2
+  exit 1
+fi
 
-json=$(printf '%s' "${out##*arnica-cluster-v1.}" | base64 -d)
+json=$(printf '%s' "${line#arnica-cluster-v1.}" | base64 -d)
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 printf '%s' "$json" | jq -r .caData | base64 -d > "$tmp/ca.crt"
