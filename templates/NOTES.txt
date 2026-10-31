@@ -1,21 +1,5 @@
 Arnica read-only access is installed in namespace {{ .Release.Namespace }}.
 
-Next: print the line to paste into Arnica. Run the block below with the same
-kubectl context you used for this install; the API server URL is taken from it.
-
------ copy from here -----
-bash -s -- {{ .Release.Namespace }} {{ include "arnica-k8s-collector.tokenSecretName" . }} <<'ARNICA_EOF'
-{{ .Files.Get "scripts/connection-line.sh" }}
-ARNICA_EOF
------ to here -----
-
-Same thing, fetched from GitHub:
+Print the line to paste into Arnica, using this same kubectl context:
 
     curl -fsSL https://raw.githubusercontent.com/arnica-io/arnica-k8s-collector/v{{ .Chart.Version }}/scripts/connection-line.sh | bash -s -- {{ .Release.Namespace }} {{ include "arnica-k8s-collector.tokenSecretName" . }}
-
-The line contains a long-lived token. Paste it only into Arnica.
-
-To revoke Arnica's access:
-
-    helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
-    kubectl delete namespace {{ .Release.Namespace }}

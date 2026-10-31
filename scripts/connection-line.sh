@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Prints the line to paste into Arnica: server URL + CA + token of the
-# arnica-collector ServiceAccount, base64-encoded as one string.
+# arnica-collector ServiceAccount, base64-encoded as one string. Then prints
+# how to revoke that access.
 # Usage: connection-line.sh [namespace] [token-secret-name]
 # The server URL comes from your current kubectl context, so run this with the
 # context Arnica should reach (not a localhost / port-forward context).
@@ -22,6 +23,17 @@ done
 server=$(kubectl config view --minify --raw -o jsonpath='{.clusters[0].cluster.server}')
 ca=$(kubectl -n "$ns" get secret "$secret" -o jsonpath='{.data.ca\.crt}')
 token=$(kubectl -n "$ns" get secret "$secret" -o go-template='{{.data.token | base64decode}}')
+release=$(kubectl -n "$ns" get secret "$secret" -o jsonpath='{.metadata.labels.app\.kubernetes\.io/instance}')
 line=$(printf '{"server":"%s","caData":"%s","token":"%s"}' "$server" "$ca" "$token" | base64 | tr -d '\n')
 
-printf '\n%s\n%s\n' "Paste this line into Arnica:" "arnica-cluster-v1.$line"
+cat <<EOF
+
+Paste this line into Arnica:
+arnica-cluster-v1.$line
+
+The line contains a long-lived token. Paste it only into Arnica.
+
+To revoke Arnica's access:
+    helm uninstall $release -n $ns
+    kubectl delete namespace $ns
+EOF
