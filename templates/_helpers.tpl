@@ -9,3 +9,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
+
+{{- /*
+ClusterRole and ClusterRoleBinding are cluster-scoped, so installs in two
+namespaces would collide on a shared name. Suffix the namespace, except in the
+namespace that matches the name, which keeps the name existing installs have.
+*/ -}}
+{{- define "arnica-k8s-collector.clusterName" -}}
+{{- if eq .Release.Namespace .Values.name }}{{ .Values.name }}{{ else }}{{ printf "%s-%s" .Values.name .Release.Namespace }}{{ end }}
+{{- end }}

@@ -9,8 +9,9 @@
 # `helm install ... -n arnica-collector --create-namespace`.
 # -----------------------------------------------------------------------------
 
-# Name for the ServiceAccount, ClusterRole and ClusterRoleBinding. Cluster-scoped
-# objects must be unique per cluster, so change this to install a second copy.
+# Name for the ServiceAccount. The ClusterRole and ClusterRoleBinding are
+# <name>-<namespace> (just <name> when the namespace equals it), so installs in
+# different namespaces of one cluster do not collide.
 name: arnica-collector
 
 # Extra ClusterRole rules appended to the default read-only set, e.g.:

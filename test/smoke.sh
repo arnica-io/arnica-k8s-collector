@@ -40,4 +40,12 @@ for check in "get secrets -A" "create configmaps -n $ns" "delete pods -A"; do
   fi
 done
 
-echo "PASS: connection line works and access is read-only"
+# Same release name in a second namespace must not collide on the cluster-scoped objects.
+ns2=$ns-2
+helm upgrade --install "$release" . -n "$ns2" --create-namespace --wait
+kubectl get clusterrolebinding "arnica-collector-$ns2" -o jsonpath="{.subjects[0].namespace}" | grep -qx "$ns2"
+kubectl get clusterrole arnica-collector >/dev/null
+helm uninstall "$release" -n "$ns2" >/dev/null
+kubectl delete namespace "$ns2" --wait=false >/dev/null
+
+echo "PASS: connection line works, access is read-only, two namespaces coexist"

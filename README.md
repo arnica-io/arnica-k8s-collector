@@ -10,8 +10,8 @@ The chart creates four objects:
 | --- | --- | --- |
 | ServiceAccount `arnica-collector` | release namespace | The identity Arnica uses |
 | Secret `arnica-collector-token` | release namespace | Long-lived token for that ServiceAccount |
-| ClusterRole `arnica-collector` | cluster | `get`, `list`, `watch` on the resources below |
-| ClusterRoleBinding `arnica-collector` | cluster | Binds the role to the ServiceAccount |
+| ClusterRole `arnica-collector`, or `arnica-collector-<namespace>` outside namespace `arnica-collector` | cluster | `get`, `list`, `watch` on the resources below |
+| ClusterRoleBinding `arnica-collector`, or `arnica-collector-<namespace>` outside namespace `arnica-collector` | cluster | Binds the role to the ServiceAccount |
 
 One command installs the chart and prints a single line. You paste that line into Arnica. Nothing is sent anywhere automatically.
 
@@ -79,7 +79,7 @@ All settings are optional. Override them with `--set key=value` or `-f values.ya
 
 | Value | Default | Description |
 | --- | --- | --- |
-| `name` | `arnica-collector` | Name of the ServiceAccount, ClusterRole and ClusterRoleBinding. The token Secret is `<name>-token`. |
+| `name` | `arnica-collector` | Name of the ServiceAccount. The token Secret is `<name>-token`. The ClusterRole and ClusterRoleBinding are `<name>-<namespace>`, or just `<name>` when the namespace equals it. |
 | `extraRules` | `[]` | Extra ClusterRole rules, appended to the default set. |
 
 Example: also let Arnica read cert-manager certificates:
